@@ -11,7 +11,6 @@ export default async function TodoList() {
 
   return (
     <>
-      <h1 className="text-4xl font-bold mb-8">Todo List</h1>
       <div>
         {unCompletedTasks.map((task: Task) => (
           <Todo key={task.id} name={task.name} description={task.description} />
