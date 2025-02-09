@@ -4,14 +4,25 @@ import { Task } from "@/types";
 import { CiTrash } from "react-icons/ci";
 
 type TodoProps = Pick<Task, "name" | "description"> & {
+  isCompleted: boolean;
   onComplete: () => void;
 };
 
-export default function Todo({ name, description, onComplete }: TodoProps) {
+export default function Todo({
+  name,
+  description,
+  isCompleted,
+  onComplete,
+}: TodoProps) {
   return (
     <div className="flex justify-between items-top gap-4">
       <div className="pt-[1rem]">
-        <input onClick={onComplete} type="checkbox" className="checkbox" />
+        <input
+          defaultChecked={isCompleted}
+          onClick={onComplete}
+          type="checkbox"
+          className="checkbox"
+        />
       </div>
       <div className="collapse collapse-arrow">
         <input type="checkbox" />

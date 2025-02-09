@@ -1,6 +1,7 @@
 "use server"
 
 import { revalidatePath } from "next/cache";
+import { Key } from "react";
 
 const wayiAPI = "https://wayi.league-funny.com/api"
 
@@ -34,23 +35,25 @@ export async function addTask(prevState: string | null | undefined, formData: Fo
         }
     }
 }
-export async function updateTaskComplete(id: string) {
+export async function updateTaskComplete(id: Key) {
 
     const currentTime = new Date().toISOString();
 
     try {
-        await fetch(`${wayiAPI}/task/${id}`, {
+        const res = await fetch(`${wayiAPI}/task/${id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ "updated_at": currentTime }),
+            body: JSON.stringify({ updated_at: currentTime }),
         })
-
-        revalidatePath("/")
+        const data = await res.json()
+        return data
     } catch (error) {
         if (error instanceof Error) {
-            return error.message
+            throw new Error(error.message);
         }
+    } finally {
+        revalidatePath("/")
     }
 }

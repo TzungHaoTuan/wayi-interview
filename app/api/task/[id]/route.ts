@@ -5,8 +5,8 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     const { id } = await params;
 
     try {
-        await updateTaskComplete(id);
-        return new Response(JSON.stringify({ message: "Task updated successfully" }), {
+        const updatedTask = await updateTaskComplete(id);
+        return new Response(JSON.stringify(updatedTask), {
             status: 200,
             headers: {
                 "Content-Type": "application/json",
