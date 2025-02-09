@@ -71,17 +71,3 @@ export async function deleteTask(id: string) {
         }
     }
 }
-export async function deleteTask(id: string) {
-
-    try {
-        await fetch(`${wayiAPI}/task/${id}`, {
-            method: "DELETE",
-        })
-
-        revalidatePath("/")
-    } catch (error) {
-        if (error instanceof Error) {
-            return error.message
-        }
-    }
-}
