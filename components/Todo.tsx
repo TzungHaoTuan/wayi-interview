@@ -6,6 +6,7 @@ import { CiTrash } from "react-icons/ci";
 type TodoProps = Pick<Task, "name" | "description"> & {
   isCompleted: boolean;
   onComplete: () => void;
+  onDelete: () => void;
 };
 
 export default function Todo({
@@ -13,6 +14,7 @@ export default function Todo({
   description,
   isCompleted,
   onComplete,
+  onDelete,
 }: TodoProps) {
   return (
     <div className="flex justify-between items-top gap-4">
@@ -31,7 +33,7 @@ export default function Todo({
           <p>{description}</p>
         </div>
       </div>
-      <div className="pt-[1rem] cursor-pointer">
+      <div onClick={onDelete} className="pt-[1rem] cursor-pointer">
         <CiTrash size={20} />
       </div>
     </div>

@@ -52,6 +52,13 @@ export default function Todos({ initialTasks }: { initialTasks: Task[] }) {
     });
   };
 
+  const handleTaskDelete = async (id: Key) => {
+    await fetch(`http://localhost:3000/api/task/${id}`, {
+      method: "DELETE",
+    });
+    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+  };
+
   const fetchTasks = async () => {
     const res = await fetch("http://localhost:3000/api/task");
     const data = await res.json();
@@ -78,6 +85,7 @@ export default function Todos({ initialTasks }: { initialTasks: Task[] }) {
                   task.is_completed
                 )
               }
+              onDelete={() => handleTaskDelete(task.id)}
             />
           ))}
       </div>
@@ -99,6 +107,7 @@ export default function Todos({ initialTasks }: { initialTasks: Task[] }) {
                   task.is_completed
                 )
               }
+              onDelete={() => handleTaskDelete(task.id)}
             />
           ))}
       </div>
