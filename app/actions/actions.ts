@@ -34,3 +34,23 @@ export async function addTask(prevState: string | null | undefined, formData: Fo
         }
     }
 }
+export async function updateTaskComplete(id: string) {
+
+    const currentTime = new Date().toISOString();
+
+    try {
+        await fetch(`${wayiAPI}/task/${id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ "updated_at": currentTime }),
+        })
+
+        revalidatePath("/")
+    } catch (error) {
+        if (error instanceof Error) {
+            return error.message
+        }
+    }
+}
