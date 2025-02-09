@@ -5,8 +5,8 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     const { id } = await params;
 
     try {
-        const { name, description, updated_at } = await request.json();
-        const updatedTask = await updateTaskComplete(id, name, description, updated_at);
+        const { name, description, updated_at, is_completed } = await request.json();
+        const updatedTask = await updateTaskComplete(id, name, description, updated_at, is_completed);
         return new Response(JSON.stringify(updatedTask), {
             status: 200,
             headers: {

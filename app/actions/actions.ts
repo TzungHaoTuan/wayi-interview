@@ -35,9 +35,7 @@ export async function addTask(prevState: string | null | undefined, formData: Fo
         }
     }
 }
-export async function updateTaskComplete(id: Key, name: string, description: string, updated_at: string) {
-
-    // const currentTime = new Date().toISOString();
+export async function updateTaskComplete(id: Key, name: string, description: string, updated_at: string, is_completed: boolean) {
 
     try {
         const res = await fetch(`${wayiAPI}/task/${id}`, {
@@ -45,7 +43,7 @@ export async function updateTaskComplete(id: Key, name: string, description: str
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ name, description, updated_at }),
+            body: JSON.stringify({ name, description, updated_at, is_completed }),
         })
         const data = await res.json()
         return data

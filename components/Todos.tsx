@@ -41,6 +41,7 @@ export default function Todos({ initialTasks }: { initialTasks: Task[] }) {
             name,
             description,
             updated_at: currentTime,
+            is_completed: !isCompleted,
           }),
         });
         const updatedTasks = await fetchTasks();
