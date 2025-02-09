@@ -2,10 +2,14 @@
 
 import { Task } from "@/types";
 import Todo from "./Todo";
-import { Key, useState } from "react";
+import { Key, useEffect, useState } from "react";
 
 export default function TodoList({ initialTasks }: { initialTasks: Task[] }) {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
+
+  useEffect(() => {
+    setTasks(initialTasks);
+  }, [initialTasks]);
 
   const completedTasks = tasks.filter((task) => task.is_completed);
   const unCompletedTasks = tasks.filter((task) => !task.is_completed);
