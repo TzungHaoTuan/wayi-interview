@@ -1,11 +1,12 @@
 import { updateTaskComplete } from "@/app/actions/actions";
 
-export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
 
     const { id } = await params;
 
     try {
-        const updatedTask = await updateTaskComplete(id);
+        const { name, description, updated_at } = await request.json();
+        const updatedTask = await updateTaskComplete(id, name, description, updated_at);
         return new Response(JSON.stringify(updatedTask), {
             status: 200,
             headers: {

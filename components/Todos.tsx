@@ -21,15 +21,27 @@ export default function Todos({ initialTasks }: { initialTasks: Task[] }) {
     setTasks(initialTasks);
   }, [initialTasks]);
 
-  const handleToggleTaskCompletion = (id: Key, isCompleted: boolean) => {
+  const handleToggleTaskCompletion = (
+    id: Key,
+    name: string,
+    description: string,
+    isCompleted: boolean
+  ) => {
+    const currentTime = new Date().toISOString();
+
     startTransition(async () => {
       toggleTaskCompletion({ id: id, is_completed: !isCompleted });
       try {
         await fetch(`http://localhost:3000/api/task/${id}`, {
-          method: "PATCH",
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
+          body: JSON.stringify({
+            name,
+            description,
+            updated_at: currentTime,
+          }),
         });
         const updatedTasks = await fetchTasks();
         setTasks(updatedTasks);
@@ -59,7 +71,12 @@ export default function Todos({ initialTasks }: { initialTasks: Task[] }) {
               description={task.description}
               isCompleted={task.is_completed}
               onComplete={() =>
-                handleToggleTaskCompletion(task.id, task.is_completed)
+                handleToggleTaskCompletion(
+                  task.id,
+                  task.name,
+                  task.description,
+                  task.is_completed
+                )
               }
             />
           ))}
@@ -75,7 +92,12 @@ export default function Todos({ initialTasks }: { initialTasks: Task[] }) {
               description={task.description}
               isCompleted={task.is_completed}
               onComplete={() =>
-                handleToggleTaskCompletion(task.id, task.is_completed)
+                handleToggleTaskCompletion(
+                  task.id,
+                  task.name,
+                  task.description,
+                  task.is_completed
+                )
               }
             />
           ))}
