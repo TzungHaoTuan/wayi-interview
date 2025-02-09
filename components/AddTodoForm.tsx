@@ -6,6 +6,8 @@ import { useActionState } from "react";
 export default function AddTodoForm() {
   const [error, action, isPending] = useActionState(addTask, null);
 
+  const buttonDisabledStyle = isPending ? "opacity-30 cursor-not-allowed" : "";
+
   return (
     <form
       action={action}
@@ -18,27 +20,29 @@ export default function AddTodoForm() {
           </label>
           <input
             required
+            disabled={isPending}
             id="name"
             name="name"
             type="text"
             maxLength={10}
-            className="bg-base-200 p-2 pl-4 mt-2 w-full border border-gray-600 focus:outline-2 focus:outline-gray-500 focus:-outline-offset-1 rounded-md"
+            className="input input-bordered w-full bg-base-200 focus:outline-2 focus:outline-gray-500 focus:-outline-offset-1 mt-2"
           />
         </div>
         <div className="w-full">
           <label htmlFor="description">Description</label>
           <input
+            disabled={isPending}
             id="description"
             name="description"
             type="text"
             maxLength={30}
-            className="bg-base-200 p-2 pl-4 mt-2 w-full border border-gray-600 focus:outline-2 focus:outline-gray-500 focus:-outline-offset-1 rounded-md"
+            className="input input-bordered w-full bg-base-200 focus:outline-2 focus:outline-gray-500 focus:-outline-offset-1 mt-2"
           />
         </div>
         <button
           disabled={isPending}
           type="submit"
-          className="ml-auto mt-4 rounded-md px-4 py-2 font-semibold border border-gray-600 shadow-xs bg-base-300 hover:bg-gray-500 hover:text-gray-900"
+          className={`button ml-auto mt-4 rounded-md px-4 py-2 font-semibold border border-gray-600 shadow-xs bg-base-300 hover:bg-gray-500 hover:text-gray-900 ${buttonDisabledStyle}`}
         >
           Add Todo
         </button>
