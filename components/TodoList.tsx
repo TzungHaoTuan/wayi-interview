@@ -24,6 +24,13 @@ export default function TodoList({ initialTasks }: { initialTasks: Task[] }) {
     );
   };
 
+  const handleTaskDelete = async (id: Key) => {
+    await fetch(`http://localhost:3000/api/task/${id}`, {
+      method: "DELETE",
+    });
+    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+  };
+
   return (
     <>
       <div>
@@ -33,6 +40,7 @@ export default function TodoList({ initialTasks }: { initialTasks: Task[] }) {
             name={task.name}
             description={task.description}
             onComplete={() => handleTaskComplete(task.id)}
+            onDelete={() => handleTaskDelete(task.id)}
           />
         ))}
       </div>
@@ -44,6 +52,7 @@ export default function TodoList({ initialTasks }: { initialTasks: Task[] }) {
             name={task.name}
             description={task.description}
             onComplete={() => handleTaskComplete(task.id)}
+            onDelete={() => handleTaskDelete(task.id)}
           />
         ))}
       </div>
