@@ -1,7 +1,5 @@
-import { Key } from "react"
-
 export interface Task {
-    id: Key
+    id: number
     name: string
     description: string
     is_completed: boolean

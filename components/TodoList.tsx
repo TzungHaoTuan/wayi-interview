@@ -1,55 +1,24 @@
 "use client";
 
 import { Task } from "@/types";
-import Todo from "./Todo";
-import { Key, useEffect, useState } from "react";
+import Todos from "./Todos";
+import AddTodoForm from "./AddTodoForm";
+import { useOptimistic } from "react";
 
 export default function TodoList({ initialTasks }: { initialTasks: Task[] }) {
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
-
-  useEffect(() => {
-    setTasks(initialTasks);
-  }, [initialTasks]);
-
-  const completedTasks = tasks.filter((task) => task.is_completed);
-  const unCompletedTasks = tasks.filter((task) => !task.is_completed);
-
-  const handleTaskComplete = async (id: Key) => {
-    await fetch(`http://localhost:3000/api/task/${id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === id ? { ...task, is_completed: true } : task
-      )
-    );
-  };
+  const [optimisticTasks, addOptimisticTask] = useOptimistic(
+    initialTasks,
+    (state, newTask: Task) => {
+      return [...state, newTask];
+    }
+  );
 
   return (
     <>
-      <div>
-        {unCompletedTasks.map((task: Task) => (
-          <Todo
-            key={task.id}
-            name={task.name}
-            description={task.description}
-            onComplete={() => handleTaskComplete(task.id)}
-          />
-        ))}
-      </div>
-      <h2 className="text-xl font-bold mt-8">Completed</h2>
-      <div>
-        {completedTasks.map((task: Task) => (
-          <Todo
-            key={task.id}
-            name={task.name}
-            description={task.description}
-            onComplete={() => handleTaskComplete(task.id)}
-          />
-        ))}
+      <h1 className="text-4xl font-bold mb-8">Todo List</h1>
+      <div className="flex flex-col gap-8">
+        <AddTodoForm addOptimisticTask={addOptimisticTask} />
+        <Todos initialTasks={optimisticTasks} />
       </div>
     </>
   );

@@ -1,16 +1,34 @@
 "use client";
 
 import { addTask } from "@/app/actions/actions";
+import { Task } from "@/types";
 import { useActionState } from "react";
 
-export default function AddTodoForm() {
+export default function AddTodoForm({
+  addOptimisticTask,
+}: {
+  addOptimisticTask: (task: Task) => void;
+}) {
   const [error, action, isPending] = useActionState(addTask, null);
 
   const buttonDisabledStyle = isPending ? "opacity-30 cursor-not-allowed" : "";
 
   return (
     <form
-      action={action}
+      action={(formData) => {
+        const currentTime = new Date();
+
+        const newTask = {
+          id: 0,
+          name: formData.get("name") as string,
+          description: formData.get("description") as string,
+          is_completed: false,
+          created_at: currentTime,
+          updated_at: currentTime,
+        };
+        addOptimisticTask(newTask);
+        action(formData);
+      }}
       className="border bg-base-200 border-gray-700 shadow-xl rounded-md"
     >
       <div className="flex flex-col gap-4 justify-center items-center p-8 px-12">
