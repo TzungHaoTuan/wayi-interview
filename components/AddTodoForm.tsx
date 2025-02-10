@@ -5,11 +5,14 @@ import { Task } from "@/types";
 import { useActionState } from "react";
 
 export default function AddTodoForm({
-  addOptimisticTask,
+  handleAddOptimisticTask,
 }: {
-  addOptimisticTask: (task: Task) => void;
+  handleAddOptimisticTask: (
+    task: Task,
+    taskPromise: Task | null | undefined
+  ) => void;
 }) {
-  const [error, action, isPending] = useActionState(addTask, null);
+  const [state, action, isPending] = useActionState(addTask, null);
 
   const buttonDisabledStyle = isPending ? "opacity-30 cursor-not-allowed" : "";
 
@@ -19,14 +22,14 @@ export default function AddTodoForm({
         const currentTime = new Date();
 
         const newTask = {
-          id: 0,
+          id: Date.now(),
           name: formData.get("name") as string,
           description: formData.get("description") as string,
           is_completed: false,
           created_at: currentTime,
           updated_at: currentTime,
         };
-        addOptimisticTask(newTask);
+        handleAddOptimisticTask(newTask, state);
         action(formData);
       }}
       className="border bg-base-200 border-gray-700 shadow-xl rounded-md"
@@ -65,7 +68,7 @@ export default function AddTodoForm({
           Add Todo
         </button>
       </div>
-      {error && <div className="text-red-500">{error}</div>}
+      {/* {error && <div className="text-red-500">{error}</div>} */}
     </form>
   );
 }

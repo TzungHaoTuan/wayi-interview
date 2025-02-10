@@ -4,10 +4,17 @@ import { Task } from "@/types";
 import Todo from "./Todo";
 import { Key, useEffect, useOptimistic, useState, useTransition } from "react";
 
-export default function Todos({ initialTasks }: { initialTasks: Task[] }) {
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+export default function Todos({
+  optimisticTasks,
+  handleDeleteOptimisticTask,
+}: {
+  optimisticTasks: Task[];
+  handleDeleteOptimisticTask: (task: Task) => void;
+}) {
+  const [tasks, setTasks] = useState<Task[]>(optimisticTasks);
+  const [isDeleting, setIsDeleting] = useState<number | null>(null);
   const [, startTransition] = useTransition();
-  const [optimisticTasks, toggleTaskCompletion] = useOptimistic(
+  const [optimisticCompletedTasks, toggleTaskCompletion] = useOptimistic(
     tasks,
     (currentTasks, updatedTask: { id: Key; is_completed: boolean }) =>
       currentTasks.map((task: Task) =>
@@ -16,10 +23,9 @@ export default function Todos({ initialTasks }: { initialTasks: Task[] }) {
           : task
       )
   );
-
   useEffect(() => {
-    setTasks(initialTasks);
-  }, [initialTasks]);
+    setTasks(optimisticTasks);
+  }, [optimisticTasks]);
 
   const handleToggleTaskCompletion = (
     id: Key,
@@ -53,11 +59,11 @@ export default function Todos({ initialTasks }: { initialTasks: Task[] }) {
     });
   };
 
-  const handleTaskDelete = async (id: Key) => {
-    await fetch(`http://localhost:3000/api/task/${id}`, {
-      method: "DELETE",
-    });
-    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+  const handleTaskDelete = async (task: Task) => {
+    const { id } = task;
+    setIsDeleting(id);
+    handleDeleteOptimisticTask(task);
+    setIsDeleting(null);
   };
 
   const fetchTasks = async () => {
@@ -70,7 +76,7 @@ export default function Todos({ initialTasks }: { initialTasks: Task[] }) {
   return (
     <>
       <div>
-        {optimisticTasks
+        {optimisticCompletedTasks
           .filter((task: Task) => !task.is_completed)
           .map((task: Task) => (
             <Todo
@@ -86,13 +92,14 @@ export default function Todos({ initialTasks }: { initialTasks: Task[] }) {
                   task.is_completed
                 )
               }
-              onDelete={() => handleTaskDelete(task.id)}
+              isDeleting={isDeleting === task.id}
+              onDelete={() => handleTaskDelete(task)}
             />
           ))}
       </div>
       <h2 className="text-xl font-bold mt-8">Completed</h2>
       <div>
-        {optimisticTasks
+        {optimisticCompletedTasks
           .filter((task: Task) => task.is_completed)
           .map((task: Task) => (
             <Todo
@@ -108,7 +115,8 @@ export default function Todos({ initialTasks }: { initialTasks: Task[] }) {
                   task.is_completed
                 )
               }
-              onDelete={() => handleTaskDelete(task.id)}
+              isDeleting={isDeleting === task.id}
+              onDelete={() => handleTaskDelete(task)}
             />
           ))}
       </div>

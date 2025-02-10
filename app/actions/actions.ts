@@ -1,11 +1,12 @@
 "use server"
 
+import { Task } from "@/types";
 import { revalidatePath } from "next/cache";
 import { Key } from "react";
 
 const wayiAPI = "https://wayi.league-funny.com/api"
 
-export async function addTask(prevState: string | null | undefined, formData: FormData) {
+export async function addTask(prevState: Task | null | undefined, formData: FormData) {
 
     const name = formData.get("name") as string;
     const description = formData.get("description") as string;
@@ -20,18 +21,20 @@ export async function addTask(prevState: string | null | undefined, formData: Fo
     }
 
     try {
-        await fetch(`${wayiAPI}/task`, {
+        const res = await fetch(`${wayiAPI}/task`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(task),
         });
+        const data: Task = await res.json();
 
         revalidatePath("/")
+        return data
     } catch (error) {
         if (error instanceof Error) {
-            return error.message
+            console.log(error.message)
         }
     }
 }
