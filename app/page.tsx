@@ -7,7 +7,7 @@ export default async function Home() {
   const tasks: Task[] = data.data;
 
   return (
-    <div className="px-16 py-16 sm:px-28 lg:px-48">
+    <div className="px-16 py-16 sm:px-28 md:px-32 lg:px-56 xl:px-80">
       <TodoList initialTasks={tasks} />
     </div>
   );

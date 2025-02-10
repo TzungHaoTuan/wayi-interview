@@ -97,7 +97,7 @@ export default function Todos({
             />
           ))}
       </div>
-      <h2 className="text-xl font-bold mt-8">Completed</h2>
+      <h2 className="text-xl font-bold">Completed</h2>
       <div>
         {optimisticCompletedTasks
           .filter((task: Task) => task.is_completed)
