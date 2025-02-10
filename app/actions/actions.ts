@@ -2,7 +2,6 @@
 
 import { Task } from "@/types";
 import { revalidatePath } from "next/cache";
-import { Key } from "react";
 
 const wayiAPI = "https://wayi.league-funny.com/api"
 
@@ -38,7 +37,7 @@ export async function addTask(prevState: Task | null | undefined, formData: Form
         }
     }
 }
-export async function updateTaskComplete(id: Key, name: string, description: string, updated_at: string, is_completed: boolean) {
+export async function updateTaskComplete(id: string, name: string, description: string, updated_at: string, is_completed: boolean) {
 
     try {
         const res = await fetch(`${wayiAPI}/task/${id}`, {
